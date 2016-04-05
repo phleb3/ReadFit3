@@ -1,0 +1,719 @@
+﻿<UserControl x:Class="ReadFit.ListDataView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
+             xmlns:local="clr-namespace:ReadFit"
+             xmlns:fm="clr-namespace:ReadFit.FileModel"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             x:Name="myControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+
+        <!--Get rid of the selected row highlight-->
+        <!--
+        <Style TargetType="DataGridCell">
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        -->
+
+        <local:DateTimeConverter x:Key="dateTimeConverter" />
+        <local:FormatStringConverter x:Key="formatStr" />
+        <local:FormatSecondsToHHMMSS x:Key="formatSeconds" />
+        <local:FormatSpeedValue x:Key="formatSpeed" />
+        <local:FormatStringValueConverter x:Key="formatValue" />
+        <local:FormatDistanceConverter x:Key="formatDistance" />
+        <local:DatagridRowNbr x:Key="rowNumberConverter" />
+        <local:ConvertTemperature x:Key="convTemperature" />
+        <local:InvBooleanToVisibilityConverter x:Key="invBoolToVis" />
+        <!--
+        <local:ConvertItemToIndex x:Key="IndexConverter" />
+        -->
+        
+    </UserControl.Resources>
+    
+    <Grid>
+
+        <!--Source={x:Static fm:DataService.Instance}, Path=activityData-->
+        <!--local:DataGridMultipleSelection.SelectedItemsSource="{Binding SelectedItems}"-->
+        <TabControl
+            Margin="10,5,10,50"
+            SelectedIndex="{Binding tabSelectedIndex}"
+            Name="tabControl1" >
+            <TabItem
+                Style="{StaticResource styleTop}"
+                Width="100"
+                FontWeight="Bold"
+                Header="Activity"
+                Name="activityTab" >
+                <Grid>
+                    <DataGrid
+                        ItemsSource="{Binding myActivityDisplay}"
+                        AutoGenerateColumns="False"
+                        Margin="5"
+                        Name="activityGrid"
+                        SelectedValue="{Binding SelectedActivityValue}"
+                        SelectedIndex="{Binding SelectedActIndex}"
+                        AlternatingRowBackground="Gainsboro"
+                        AlternationCount="3"
+                        Block.TextAlignment="Center"
+                        CanUserAddRows="False"
+                        IsReadOnly="True"
+                        CanUserReorderColumns="False"
+                        CanUserResizeColumns="False"
+                        CanUserSortColumns="False"
+                        SelectionMode="Single">
+                        <DataGrid.RowHeaderStyle>
+                            <Style TargetType="DataGridRowHeader">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource rowNumberConverter}">
+                                            <Binding />
+                                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.RowHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="ContentTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <CheckBox
+                                                        IsChecked="{Binding Path=DataContext.IsSelected, ElementName=myControl, FallbackValue=False}"
+                                                        Command="{Binding Path=DataContext.SelectAllRows, ElementName=myControl}"
+                                                        Content="Select"
+                                                        FontWeight="Bold"
+                                                        Width="Auto" />
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </DataGridTemplateColumn.HeaderStyle>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsChecked="{Binding myDeleteFlag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Command="{Binding Path=DataContext.MyTestBinding, ElementName=myControl}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn
+                                Header="Sport"
+                                FontWeight="Bold"
+                                Width="90"
+                                Binding="{Binding Path=sport}" />
+                            <DataGridTextColumn
+                                Header="Date"
+                                FontWeight="Bold"
+                                Width="170"
+                                Binding="{Binding Converter={StaticResource dateTimeConverter}, ConverterParameter=G, Path=timeStamp}" />
+                            <DataGridTextColumn
+                                Header="Id"
+                                FontWeight="Bold"
+                                Width="90"
+                                Binding="{Binding Path=id}" />
+                            <DataGridTextColumn
+                                Header="Name"
+                                FontWeight="Bold"
+                                Width="90"
+                                Binding="{Binding Path=name}" />
+                            <DataGridTextColumn
+                                Header="Unit Id"
+                                FontWeight="Bold"
+                                Width="90"
+                                Binding="{Binding Path=unitId}" />
+                            <DataGridTextColumn
+                                Header="Product Id"
+                                FontWeight="Bold"
+                                Width="90"
+                                Binding="{Binding Path=productId}" />
+                            <DataGridTextColumn
+                                Header="GPS"
+                                FontWeight="Bold"
+                                Width="50"
+                                Binding="{Binding Path=HasGpsData}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                            <i:InvokeCommandAction Command="{Binding TrackAct}" CommandParameter="Act" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Grid>
+            </TabItem>
+            
+            <TabItem
+                Style="{StaticResource styleTop}"
+                Width="100"
+                FontWeight="Bold"
+                Header="Lap"
+                Name="lapTab">
+                <Grid>
+                    <DataGrid
+                        ItemsSource="{Binding myLapDisplay}"
+                        SelectedValue="{Binding SelectedLapValue}"
+                        SelectedIndex="{Binding SelectedLapIndex}"
+                        AutoGenerateColumns="False"
+                        Margin="5"
+                        Name="lapGrid"
+                        AlternatingRowBackground="Gainsboro"
+                        AlternationCount="3"
+                        CanUserAddRows="False"
+                        IsReadOnly="True"
+                        Block.TextAlignment="Center" >
+                        <DataGrid.RowHeaderStyle>
+                            <Style TargetType="DataGridRowHeader">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource rowNumberConverter}">
+                                            <Binding />
+                                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.RowHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Header="Start Time"
+                                FontWeight="Bold"
+                                Width="150"
+                                Binding="{Binding Path=startTime}" />
+                            <DataGridTextColumn
+                                Header="Total Elapsed"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=totalElaspedTime}" />
+                            <DataGridTextColumn
+                                Header="Total Timer"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=totalTimerTime}" />
+                            <DataGridTextColumn
+                                Header="Distance"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatDistance}, ConverterParameter=\{0:0.00\}, Path=totalDistance}" />
+                            <DataGridTextColumn
+                                Header="Average&#x0a; Speed"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatSpeed}, ConverterParameter=\{0:0.0\}, Path=avgSpeed}" />
+                            <DataGridTextColumn
+                                Header="Maximum&#x0a; Speed"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatSpeed}, ConverterParameter=\{0:0.0\}, Path=maxSpeed}" />
+                            <DataGridTextColumn
+                                Header="Total Cycles"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=totalCycles}" />
+                            <DataGridTextColumn
+                                Header="Calories"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=totalCalories}" />
+                            <DataGridTextColumn
+                                Header="Average&#x0a; Heart Rate"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=avgHeartRate}" />
+                            <DataGridTextColumn
+                                Header="Maximum&#x0a; Heart Rate"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=maxHeartRate}" />
+                            <DataGridTextColumn
+                                Header="Intensity"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=intensity}" />
+                            <DataGridTextColumn
+                                Header="Average&#x0a; Cadence"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=avgCadence}" />
+                            <DataGridTextColumn
+                                Header="Maximum&#x0a; Cadence"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=maxCadence}" />
+                            <DataGridTextColumn
+                                Header="Trigger&#x0a; Method"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=lapTrigger}" />
+                            <DataGridTextColumn
+                                Header="Fat&#x0a; Calories"
+                                Binding="{Binding Path=totalFatCalories}" />
+                        </DataGrid.Columns>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                                <i:InvokeCommandAction Command="{Binding TrackAct}" CommandParameter="Lap" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            
+            <TabItem
+                Style="{StaticResource styleTop}"
+                Width="100"
+                FontWeight="Bold"
+                Header="TrackPoints"
+                Name="trackpointTab">
+                <Grid>
+                    <DataGrid
+                        ItemsSource="{Binding Source={x:Static fm:DataService.Instance}, Path=trackData}"
+                        AutoGenerateColumns="False"
+                        Margin="5"
+                        EnableColumnVirtualization="True"
+                        EnableRowVirtualization="True"
+                        Block.TextAlignment="Center"
+                        AlternatingRowBackground="Gainsboro"
+                        AlternationCount="3"
+                        IsReadOnly="True"
+                        CanUserAddRows="False"
+                        Name="trackpointGrid" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Header="TimeStamp"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=timeStamp}" />
+                            <DataGridTextColumn
+                                Header="Latitude"
+                                FontWeight="Bold"
+                                Width="100"
+                                Binding="{Binding Converter={StaticResource formatValue}, ConverterParameter=\{0:0.000000\}, Path=latitude}" />
+                            <DataGridTextColumn
+                                Header="Longitude"
+                                FontWeight="Bold"
+                                Width="100"
+                                Binding="{Binding Converter={StaticResource formatValue}, ConverterParameter=\{0:0.000000\}, Path=longitude}" />
+                            <DataGridTextColumn
+                                Header="Distance"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatStr}, ConverterParameter=\{0:0.00\}, Path=distance}" />
+                            <DataGridTextColumn
+                                Header="Altitude"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatStr}, ConverterParameter=\{0:0.00\}, Path=altitude}" />
+                            <DataGridTextColumn
+                                Header="Speed"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatSpeed}, ConverterParameter=\{0:0.0\}, Path=speed}" >
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="0.0" >
+                                                <Setter Property="Background" Value="LightPink" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn
+                                Header="Heart Rate"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=heartRate}" />
+                            <DataGridTextColumn
+                                Header="Cadence"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=cadence}" />
+                            <DataGridTextColumn
+                                Header="Temperature"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource convTemperature}, Path=temperature}" />
+                            <DataGridTextColumn
+                                Visibility="Visible"
+                                Header="Sequence"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=sequence}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <!--Source={x:Static fm:DataService.Instance}, Path=STPTM-->
+            <!--myStopDisplay-->
+            <TabItem
+                Style="{StaticResource styleTop}"
+                Width="120"
+                FontWeight="Bold" 
+                Header="{Binding TabHeaderStp, Source={x:Static fm:DataService.Instance}}" >
+                <Grid>
+                    <DataGrid
+                        ItemsSource="{Binding Source={x:Static fm:DataService.Instance}, Path=STPTM}"
+                        AutoGenerateColumns="False"
+                        Margin="5"
+                        Block.TextAlignment="Center"
+                        IsReadOnly="True"
+                        AlternatingRowBackground="Gainsboro"
+                        AlternationCount="2"
+                        Name="stoptimeGrid" >
+                        <DataGrid.RowHeaderStyle>
+                            <Style TargetType="DataGridRowHeader">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource rowNumberConverter}">
+                                            <Binding />
+                                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.RowHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                    Header="Start"
+                                    Binding="{Binding Path=Start}" />
+                            <DataGridTextColumn
+                                    Header="End"
+                                    Binding="{Binding Path=End}" />
+                            <DataGridTextColumn
+                                    Header="Duration"
+                                    Binding="{Binding Path=Duration}" />
+                            <DataGridTextColumn
+                                    Header="Degrees Latitude"
+                                    Binding="{Binding Converter={StaticResource formatValue}, ConverterParameter=\{0:0.000000\}, Path=LatitudeDegrees}" />
+                            <DataGridTextColumn
+                                    Header="Degrees Longitude"
+                                    Binding="{Binding Converter={StaticResource formatValue}, ConverterParameter=\{0:0.000000\}, Path=LongitudeDegrees}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem
+                Style="{StaticResource styleTop}"
+                Width="100"
+                FontWeight="Bold"
+                Header="Session"
+                Name="sessionTab">
+                <Grid>
+                    <DataGrid
+                        ItemsSource="{Binding Source={x:Static fm:DataService.Instance}, Path=sessionData}"
+                        SelectedValue="{Binding SelectedSessionValue}"
+                        SelectedIndex="{Binding SelectedSesIndex}"
+                        AutoGenerateColumns="False"
+                        Margin="5"
+                        Name="sessionGrid"
+                        CanUserAddRows="False"
+                        Block.TextAlignment="Center">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Header="TimeStamp"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=timeStamp}" />
+                            <DataGridTextColumn
+                                Header="Start Time"
+                                FontWeight="Bold"
+                                Width="150"
+                                Binding="{Binding Path=startTime}" />
+                            <DataGridTextColumn
+                                Header="Start Latitude"
+                                FontWeight="Bold"
+                                Width="100"
+                                Binding="{Binding Converter={StaticResource formatValue}, ConverterParameter=\{0:0.000000\}, Path=startPositionLat}" />
+                            <DataGridTextColumn
+                                Header="Start Longitude"
+                                FontWeight="Bold"
+                                Width="100"
+                                Binding="{Binding Converter={StaticResource formatValue}, ConverterParameter=\{0:0.000000\}, Path=startPositionLong}" />
+                            <DataGridTextColumn
+                                Header="Total Timer"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=totalTimerTime}" />
+                            <DataGridTextColumn
+                                Header="Total Elapsed"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=totalElapsedTime}" />
+                            <DataGridTextColumn
+                                Header="Distance"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatDistance}, ConverterParameter=\{0:0.00\}, Path=totalDistance}" />
+                            <DataGridTextColumn
+                                Header="Total Cycles"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=totalCycles}" />
+                            <DataGridTextColumn
+                                Header="Nec Latitude"
+                                FontWeight="Bold"
+                                Width="100"
+                                Binding="{Binding Converter={StaticResource formatValue}, ConverterParameter=\{0:0.000000\}, Path=necLat}" />
+                            <DataGridTextColumn
+                                Header="Nec Longitude"
+                                FontWeight="Bold"
+                                Width="100"
+                                Binding="{Binding Converter={StaticResource formatValue}, ConverterParameter=\{0:0.000000\}, Path=necLong}" />
+                            <DataGridTextColumn
+                                Header="Swc Latitude"
+                                FontWeight="Bold"
+                                Width="100"
+                                Binding="{Binding Converter={StaticResource formatValue}, ConverterParameter=\{0:0.000000\}, Path=swcLat}" />
+                            <DataGridTextColumn
+                                Header="Swc Longitude"
+                                FontWeight="Bold"
+                                Width="100"
+                                Binding="{Binding Converter={StaticResource formatValue}, ConverterParameter=\{0:0.000000\}, Path=swcLong}" />
+                            <DataGridTextColumn
+                                Header="Total Calories"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=totalCalories}" />
+                            <DataGridTextColumn
+                                Header="Average&#x0a; Speed"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatSpeed}, ConverterParameter=\{0:0.0\}, Path=avgSpeed}" />
+                            <DataGridTextColumn
+                                Header="Maximum&#x0a; Speed"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatSpeed}, ConverterParameter=\{0:0.0\}, Path=maxSpeed}" />
+                            <DataGridTextColumn
+                                Header="Average&#x0a; Power"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=avgPower}" />
+                            <DataGridTextColumn
+                                Header="Maximum&#x0a; Power"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=maxPower}" />
+                            <DataGridTextColumn
+                                Header="Total&#x0a; Ascent"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatStr}, ConverterParameter=\{0:0.0\}, Path=totalAscent}" />
+                            <DataGridTextColumn
+                                Header="Total&#x0a; Descent"
+                                FontWeight="Bold"
+                                Binding="{Binding Converter={StaticResource formatStr}, ConverterParameter=\{0:0.0\}, Path=totalDescent}" />
+                            <DataGridTextColumn
+                                Header="First&#x0a; Lap Index"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=firstLapIndex}" />
+                            <DataGridTextColumn
+                                Header="Number&#x0a; Of Laps"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=numLaps}" />
+                            <DataGridTextColumn
+                                Header="Event"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=myEvent}" />
+                            <DataGridTextColumn
+                                Header="Event&#x0a; Type"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=myEventType}" />
+                            <DataGridTextColumn
+                                Header="Sport"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=sport}" />
+                            <DataGridTextColumn
+                                Header="SubSport"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=subSport}" />
+                            <DataGridTextColumn
+                                Header="Average&#x0a; Heartrate"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=avgHeartRate}" />
+                            <DataGridTextColumn
+                                Header="Maximum&#x0a; Heartrate"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=maxHeartRate}" />
+                            <DataGridTextColumn
+                                Header="Average&#x0a; Cadence"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=avgCadence}" />
+                            <DataGridTextColumn
+                                Header="Maximum&#x0a; Cadence"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=maxCadence}" />
+                            <DataGridTextColumn
+                                Header="Event&#x0a; Group"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=myEventGroup}" />
+                            <DataGridTextColumn
+                                Header="Trigger"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=trigger}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown" >
+                            <i:InvokeCommandAction Command="{Binding TrackAct}" CommandParameter="Ses" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Grid>
+            </TabItem>
+  
+            
+            <TabItem
+                Style="{StaticResource styleTop1}"
+                Width="120"
+                FontWeight="Bold"
+                Header="Chart" >
+                <Grid>
+                    <oxy:Plot
+                        Margin="2"
+                        Model="{Binding myPlotModel}" />
+                </Grid>
+            </TabItem>
+            
+
+            <!--Visibility="{Binding HideCorrectionTab, Converter={StaticResource invBoolToVis}}"-->
+            <!--
+            <TabItem
+                Visibility="{Binding HideCorrectionTab, Converter={StaticResource invBoolToVis}}"
+                Style="{StaticResource styleTop}"
+                Width="120"
+                FontWeight="Bold"
+                Header="Correction" >
+                <Grid>
+                    <oxy:Plot
+                        Margin="2"
+                        Model="{Binding myCorrectionModel}" />
+                </Grid>
+            </TabItem>
+            <-->
+            <!--
+            <TabItem
+                Style="{StaticResource styleTop}"
+                Width="120"
+                FontWeight="Bold"
+                Header="Chart">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    
+                    <oxy:Plot
+                        Grid.Row="0"
+                        Margin="2"
+                        Model="{Binding myPlotModel}" />
+                    <oxy:Plot
+                        Grid.Row="1"
+                        Margin="2"
+                        Model="{Binding myPlotModel1}" />
+                    <oxy:Plot
+                        Grid.Row="2"
+                        Margin="2"
+                        Model="{Binding myPlotModel2}" />
+                </Grid>
+            </TabItem>
+            -->
+        </TabControl>
+
+        <!--<oxy:Plot
+                    Title="HeartRate"
+                    Margin="10" >
+                    <oxy:LineSeries
+                        Color="DarkBlue"
+                        ItemsSource="{Binding displayThis}"
+                        DataFieldX="yAxis"
+                        DataFieldY="xAxis" />
+                </oxy:Plot>-->
+
+        <Button
+            Command="{Binding StuffToDelete}"
+            Content="Delete"
+            ToolTipService.ShowOnDisabled="True"
+            Height="23"
+            HorizontalAlignment="Left"
+            Margin="360,0,0,10"
+            Name="button1"
+            VerticalAlignment="Bottom"
+            Width="75">
+            <Button.ToolTip>
+                <ToolTip Style="{StaticResource MyTooltip}">
+                    <StackPanel>
+                        <TextBlock FontWeight="Bold">Delete</TextBlock>
+                        <TextBlock>Select Which Rows To Delete</TextBlock>
+                    </StackPanel>
+                </ToolTip>
+            </Button.ToolTip>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="4" />
+            </Button.Effect>
+        </Button>
+
+        <CheckBox
+            IsChecked="{Binding LapsByDate}"
+            Command="{Binding TestSelect}"
+            Content="List Laps by Date"
+            Height="16"
+            HorizontalAlignment="Left"
+            Margin="500,0,0,10"
+            Name="checkBox1"
+            FontWeight="Bold"
+            VerticalAlignment="Bottom" >
+            <CheckBox.ToolTip>
+                <ToolTip Style="{StaticResource MyTooltip}">
+                    <StackPanel>
+                        <TextBlock FontWeight="Bold">Laps By Date</TextBlock>
+                        <TextBlock>Check to see only the laps for this date</TextBlock>
+                    </StackPanel>
+                </ToolTip>
+            </CheckBox.ToolTip>
+        </CheckBox>
+        
+        <ToggleButton
+            IsChecked="{Binding Source={x:Static fm:DataService.Instance}, Path=DistanceTimeFlag}"
+            HorizontalContentAlignment="Right"
+            FontWeight="Bold"
+            Content="Show Distance"
+            Background="IndianRed"
+            BorderBrush="{x:Null}"
+            Style="{DynamicResource SlidingToggleButton}"
+            Height="22"
+            Width="172"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Margin="641,0,0,10">
+        </ToggleButton>
+
+        <!--
+        <Button
+            Visibility="Hidden"
+            Content="Test"
+            Command="{Binding ResetPlot}"
+            Height="23"
+            HorizontalAlignment="Right"
+            Margin="0,0,55,10"
+            Name="button2"
+            VerticalAlignment="Bottom"
+            Width="75" />
+        -->
+
+        <TextBlock
+            TextAlignment="Right"
+            Height="23"
+            Width="96"
+            FontWeight="Bold"
+            HorizontalAlignment="Left"
+            Margin="160,0,0,10"
+            Name="textBlock2"
+            Text="{Binding recordCount}"
+            VerticalAlignment="Bottom" />
+
+        <TextBlock
+            Height="23"
+            FontWeight="Bold"
+            HorizontalAlignment="Left"
+            Margin="260,0,0,10"
+            Name="textBlock3"
+            Text="{Binding RecordDisplay}"
+            VerticalAlignment="Bottom" />
+
+        <TextBlock
+            Height="23"
+            HorizontalAlignment="Left"
+            Margin="10,0,0,10"
+            Name="textBlock1"
+            FontWeight="Bold"
+            FontSize="16"
+            Text="{Binding Name}"
+            VerticalAlignment="Bottom"
+            Width="96" />
+        
+    </Grid>
+</UserControl>

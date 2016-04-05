@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Document>
+  <!-- Splits go into a dictionary -->
+  <Split>
+    <Name>2 Miles</Name>
+    <Distance>10560</Distance>
+  </Split>
+  <Split>
+    <Name>1 Mile</Name>
+    <Distance>5280</Distance>
+  </Split>
+  <Split>
+    <Name>1/2 Mile</Name>
+    <Distance>2640</Distance>
+  </Split>
+  <Split>
+    <Name>1/4 Mile</Name>
+    <Distance>1320</Distance>
+  </Split>
+  <Split>
+    <Name>1 Kilometer</Name>
+    <Distance>1000</Distance>
+  </Split>
+  <Split>
+    <Name>2 Kilometers</Name>
+    <Distance>2000</Distance>
+  </Split>
+  <Split>
+    <Name>5 Kilometers</Name>
+    <Distance>5000</Distance>
+  </Split>
+  <!-- File types go into a listbox -->
+  <File>
+    <Type>Simple Path</Type>
+  </File>
+  <File>
+    <Type>Time Slider</Type>
+  </File>
+  <File>
+    <Type>Splits</Type>
+  </File>
+  <!-- Tab locations are going to be replaced by an enum -->
+  <Tab>
+    <Location>Top</Location>
+  </Tab>
+  <Tab>
+    <Location>Right</Location>
+  </Tab>
+  <Tab>
+    <Location>Bottom</Location>
+  </Tab>
+  <Tab>
+    <Location>Left</Location>
+  </Tab>
+
+  <Linew>
+    <Width>2</Width>
+  </Linew>
+  <Linew>
+    <Width>3</Width>
+  </Linew>
+  <Linew>
+    <Width>4</Width>
+  </Linew>
+  <Linew>
+    <Width>5</Width>
+  </Linew>
+  <Linew>
+    <Width>6</Width>
+  </Linew>
+  <Linew>
+    <Width>7</Width>
+  </Linew>
+  <Linew>
+    <Width>8</Width>
+  </Linew>
+  <Linew>
+    <Width>9</Width>
+  </Linew>
+  <Linew>
+    <Width>10</Width>
+  </Linew>
+
+  <Line>
+    <Opacity>100</Opacity>
+  </Line>
+  <Line>
+    <Opacity>90</Opacity>
+  </Line>
+  <Line>
+    <Opacity>80</Opacity>
+  </Line>
+  <Line>
+    <Opacity>70</Opacity>
+  </Line>
+  <Line>
+    <Opacity>60</Opacity>
+  </Line>
+  <Line>
+    <Opacity>50</Opacity>
+  </Line>
+  <Line>
+    <Opacity>40</Opacity>
+  </Line>
+  <Line>
+    <Opacity>30</Opacity>
+  </Line>
+  <Line>
+    <Opacity>20</Opacity>
+  </Line>
+  <Line>
+    <Opacity>10</Opacity>
+  </Line>
+</Document>

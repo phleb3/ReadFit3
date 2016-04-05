@@ -38,7 +38,8 @@ namespace ReadFit
 
             DataService.Instance.mycrashFlag = false;
 
-            NavValue = Visibility.Hidden;
+            NavValueR = Visibility.Hidden;
+            NavValueL = Visibility.Hidden;
 
             ViewReplaced = false;
 
@@ -58,7 +59,9 @@ namespace ReadFit
 
             //bool test1 = datalayer.BackupDatabase(@"C:\Users\mark\Documents\dbase.bak");
 
-            SelectedIndex = -1;
+            SelectedActIndex = -1;
+            SelectedSesIndex = -1;
+            SelectedLapIndex = -1;
 
             DataService.Instance.TabHeaderStp = "Stop Time";
 
@@ -117,14 +120,14 @@ namespace ReadFit
                         bool gpsflag = false;
                         int rowid = 0;
 
-                        if (DataService.Instance.activityData != null)
-                        {
-                            if (DataService.Instance.activityData.Count > 0)
-                            {
-                                gpsflag = DataService.Instance.activityData[0].HasGpsData;
-                                rowid = DataService.Instance.activityData[0].rowID;
-                            }
-                        }
+                        //if (DataService.Instance.activityData != null)
+                        //{
+                        //    if (DataService.Instance.activityData.Count > 0)
+                        //    {
+                        //        gpsflag = DataService.Instance.activityData[0].HasGpsData;
+                        //        rowid = DataService.Instance.activityData[0].rowID;
+                        //    }
+                        //}
 
                         if (!t.Result.IsFaulted)
                         {
@@ -132,7 +135,14 @@ namespace ReadFit
 
                             if (isLoaded)
                             {
+                                if (!DataService.Instance.activityData.IsNullOrEmpty())
+                                {
+                                    gpsflag = DataService.Instance.activityData[0].HasGpsData;
+                                    rowid = DataService.Instance.activityData[0].rowID;
+                                }
+
                                 recordCount = getRecCnt(tabSelectedIndex);
+                                //var test6 = DataService.Instance.sessionData.Count;
 
                                 //gr.testElevationRead(gpsflag, rowid);     //get a GoogleElevation read for each lat,long point in ride
 
@@ -263,7 +273,7 @@ namespace ReadFit
             switch (msg.FlagName)
             {
                 case "Correction":
-                    //myCorrectionModel = getData(msg.FlagState);
+                    //myCorrectionModel = getData(msg.FlagState);   //google elevations
                     break;
 
                 case "Chart":
@@ -284,6 +294,9 @@ namespace ReadFit
 
                         myActivityDisplay.Refresh();
                         myLapDisplay.Refresh();
+
+                        myPlotModel = threeChart(msg.FlagState);
+                        OnPropertyChanged("myPlotModel");
                     }
                     break;
 
@@ -464,8 +477,6 @@ namespace ReadFit
                 }
             }
 
-            //hrFlag = (Properties.Settings.Default.MaximumHeartRate > 0) ? true : false;
-
             if (hrFlag)
             {
                 hrLimit = (double)Properties.Settings.Default.MaximumHeartRate * 0.85;
@@ -479,6 +490,11 @@ namespace ReadFit
 
             current1 = DateTime.Parse(DataService.Instance.trackData[0].timeStamp);
             string axisTitle = String.Format("{0:dddd, MMMM d, yyyy}", current1);
+
+            if (LapsByDate)
+            {
+                axisTitle += " Lap " + LapsByDateLapNbr.ToString();
+            }
 
             PlotModel myPlotModel1 = new PlotModel();
 
@@ -553,7 +569,7 @@ namespace ReadFit
             }
 
             var linearAxis1 = new LinearAxis();
-            linearAxis1.EndPosition = 1;
+            linearAxis1.EndPosition = 1;            //top graph of 4 horizontal graphs
             linearAxis1.StartPosition = 0.75;
             linearAxis1.MajorGridlineStyle = LineStyle.Solid;
             linearAxis1.MinorGridlineStyle = LineStyle.Dot;
@@ -738,16 +754,88 @@ namespace ReadFit
             }
         }
 
-        private Visibility _NavValue;
-        public Visibility NavValue
+        private ICommand trackAct;
+        public ICommand TrackAct
         {
-            get { return _NavValue; }
+            get
+            {
+                if (trackAct == null)
+                {
+                    trackAct = new RelayCommand(p => mytest1((string)p));
+                }
+
+                return trackAct;
+            }
+        }
+
+        private void mytest1(string msg)
+        {
+            switch (msg)
+            {
+                case "Act":
+                    lastClickType = "Activity";
+                    break;
+                case "Lap":
+                    lastClickType = "Lap";
+                    break;
+                case "Ses":
+                    lastClickType = "Session";
+                    break;
+            }
+        }
+
+        private Visibility _NavValueR;
+        public Visibility NavValueR
+        {
+            get { return _NavValueR; }
             set
             {
-                if (value != _NavValue)
+                if (value != _NavValueR)
                 {
-                    _NavValue = value;
-                    OnPropertyChanged("NavValue");
+                    _NavValueR = value;
+                    OnPropertyChanged("NavValueR");
+                }
+            }
+        }
+
+        private Visibility _NavValueL;
+        public Visibility NavValueL
+        {
+            get { return _NavValueL; }
+            set
+            {
+                if (value != _NavValueL)
+                {
+                    _NavValueL = value;
+                    OnPropertyChanged("NavValueL");
+                }
+            }
+        }
+
+        private int _currentIndex;
+        public int currentIndex
+        {
+            get { return _currentIndex; }
+            set
+            {
+                if (value != _currentIndex)
+                {
+                    _currentIndex = value;
+                    OnPropertyChanged("currentIndex");
+                }
+            }
+        }
+
+        private string _currentTimeStamp;
+        public string currentTimeStamp
+        {
+            get { return _currentTimeStamp; }
+            set
+            {
+                if (value != _currentTimeStamp)
+                {
+                    _currentTimeStamp = value;
+                    OnPropertyChanged("currentTimeStamp");
                 }
             }
         }
@@ -768,7 +856,66 @@ namespace ReadFit
 
         private void findNext(string msg)
         {
-            msgBoxobj.ShowNotification("Got Here -> " + msg);
+            int myCount = 0;
+
+            switch (msg)
+            {
+                case "Forward":
+                    currentIndex++;
+                    break;
+
+                case "Backward":
+                    currentIndex--;
+                    break;
+            }
+
+            LapsByDateLapNbr = currentIndex + 1;
+
+            if (currentIndex > 0)
+            {
+                NavValueL = Visibility.Visible;
+            }
+            else
+            {
+                NavValueL = Visibility.Hidden;
+            }
+
+            switch (lastClickType)
+            {
+                case "Activity":
+                    currentTimeStamp = DataService.Instance.activityData[currentIndex].timeStamp;
+                    myCount = DataService.Instance.activityData.Count - 1;
+                    SelectedActIndex = currentIndex;
+                    break;
+                case "Lap":
+                    var listlaps = myLapDisplay.Cast<myLapRecord>().ToList();
+                    currentTimeStamp = listlaps[currentIndex].lpkey;
+                    myCount = listlaps.Count - 2;
+                    SelectedLapIndex = currentIndex;
+                    break;
+                case "Session":
+                    currentTimeStamp = DataService.Instance.sessionData[currentIndex].myskey;
+                    myCount = DataService.Instance.sessionData.Count - 1;
+                    SelectedSesIndex = currentIndex;
+                    break;
+            }
+
+            if (currentIndex < myCount)
+            {
+                NavValueR = Visibility.Visible;
+
+                //int myrowid = datalayer.getUserData<int, string>(currentTimeStamp, "GetRowId");
+
+                //Task.Factory.StartNew(() => getTrackData(myrowid));
+            }
+            else
+            {
+                NavValueR = Visibility.Hidden;
+            }
+
+            int myrowid = datalayer.getUserData<int, string>(currentTimeStamp, "GetRowId");
+
+            Task.Factory.StartNew(() => getTrackData(myrowid));
         }
 
         private int _tabSelectedIndex;
@@ -784,13 +931,47 @@ namespace ReadFit
 
                     recordCount = getRecCnt(value);     //get the record count of the selected tab
 
+                    int maxcnt = 0;                                                                                                                                              
+
                     if (value == 5)
                     {
-                        NavValue = Visibility.Visible;
+                        switch (lastClickType)
+                        {
+                            case "Activity":
+                                currentIndex = SelectedActIndex >= 0 ? SelectedActIndex : 0;
+                                maxcnt = DataService.Instance.activityData.Count - 1;
+                                break;
+                            case "Lap":
+                                currentIndex = SelectedLapIndex >= 0 ? SelectedLapIndex : 0;
+                                if (LapsByDate)
+                                {
+                                    maxcnt = myLapDisplay.Count - 2;
+                                }
+                                else
+                                {
+                                    maxcnt = DataService.Instance.lapData.Count - 1;
+                                }
+                                break;
+                            case "Session":
+                                currentIndex = SelectedSesIndex >= 0 ? SelectedSesIndex : 0;
+                                maxcnt = DataService.Instance.sessionData.Count - 1;
+                                break;
+                        }
+
+                        if (currentIndex > 0)
+                        {
+                            NavValueL = Visibility.Visible;
+                        }
+
+                        if (currentIndex < maxcnt)
+                        {
+                            NavValueR = Visibility.Visible;
+                        }
                     }
                     else
                     {
-                        NavValue = Visibility.Hidden;
+                        NavValueR = Visibility.Hidden;
+                        NavValueL = Visibility.Hidden;
                     }
                 }
             }
@@ -879,7 +1060,21 @@ namespace ReadFit
             }
         }
 
-        private void testdgselect()     //to do: if laps by date, and more than one lap, add totals
+        private int _LapsByDateLapNbr;
+        public int LapsByDateLapNbr
+        {
+            get { return _LapsByDateLapNbr; }
+            set
+            {
+                if (value != _LapsByDateLapNbr)
+                {
+                    _LapsByDateLapNbr = value;
+                    OnPropertyChanged("LapsByDateLapNbr");
+                }
+            }
+        }
+      
+        private void testdgselect()
         {
             TimeSpan mytemp;
             TimeSpan timr = TimeSpan.Zero;
@@ -907,6 +1102,18 @@ namespace ReadFit
                         else
                         {
                             FilterString = DataService.Instance.activityData[0].timeStamp;
+                        }
+                        break;
+
+                    case "Lap":
+                        if (SelectedLapValue != null)
+                        {
+                            var lap = SelectedLapValue as myLapRecord;
+                            FilterString = lap.lpkey;
+                        }
+                        else
+                        {
+                            FilterString = DataService.Instance.lapData[0].lpkey;
                         }
                         break;
 
@@ -1247,7 +1454,11 @@ namespace ReadFit
                     _SelectedLapValue = value;
                     OnPropertyChanged("SelectedLapValue");
 
+                    //lastClickType = "Lap";
+
                     var keyValue = value as myLapRecord;
+
+                    //msgBoxobj.ShowNotification("Primary Key = " + keyValue.primarKey + " LpKey = " + keyValue.lpkey);
 
                     if (keyValue != null)
                     {
@@ -1259,11 +1470,11 @@ namespace ReadFit
 
                         if (keyValue.lpkey != null)
                         {
-                            var t6 = DataService.Instance.activityData.Where(x => x.timeStamp == keyValue.lpkey).FirstOrDefault();
+                            //var t6 = DataService.Instance.activityData.Where(x => x.timeStamp == keyValue.lpkey).FirstOrDefault();
 
                             int myrowid = datalayer.getUserData<int, string>(keyValue.lpkey, "GetRowId");
 
-                            Task.Factory.StartNew(() => getTrackData(myrowid, t6.HasGpsData));   //getTrackData needs to run in a seperate thread
+                            Task.Factory.StartNew(() => getTrackData(myrowid));   //getTrackData needs to run in a seperate thread
                         }
                     }
                 }
@@ -1283,7 +1494,7 @@ namespace ReadFit
                         _SelectedActivityValue = value;
                         OnPropertyChanged("SelectedActivityValue");
 
-                        lastClickType = "Activity";
+                        //lastClickType = "Activity";
 
                         var keyValue = value as myActivityRecord;
 
@@ -1295,7 +1506,7 @@ namespace ReadFit
 
                         int myrowid = datalayer.getUserData<int,string>(keyValue.timeStamp, "GetRowId");
 
-                        Task.Factory.StartNew(() => getTrackData(myrowid, keyValue.HasGpsData));     //getTrackData needs to run in a seperate thread
+                        Task.Factory.StartNew(() => getTrackData(myrowid));     //getTrackData needs to run in a seperate thread
 
                         if (LapsByDate)
                         {
@@ -1325,15 +1536,14 @@ namespace ReadFit
                         Sport = keyValue.sport
                     });
 
-                    lastClickType = "Session";
+                    //lastClickType = "Session";
 
                     if (keyValue.myskey != null)
                     {
-                        var t6 = DataService.Instance.activityData.Where(x => x.timeStamp == keyValue.myskey).FirstOrDefault();
-
+                        //var t6 = DataService.Instance.activityData.Where(x => x.timeStamp == keyValue.myskey).FirstOrDefault();
                         int myrowid = datalayer.getUserData<int, string>(keyValue.myskey, "GetRowId");
 
-                        Task.Factory.StartNew(() => getTrackData(myrowid, t6.HasGpsData));   //getTrackData needs to run in a seperate thread
+                        Task.Factory.StartNew(() => getTrackData(myrowid));   //getTrackData needs to run in a seperate thread
                     }
 
                     if (LapsByDate)
@@ -1344,10 +1554,35 @@ namespace ReadFit
             }
         }
       
+        //private void getTrackData(int key, bool gpsflag)     //run in a seperate thread due to AsyncObservableCollection - see FileModel for class
 
-        private void getTrackData(int key, bool gpsflag)     //run in a seperate thread due to AsyncObservableCollection - see FileModel for class
+        private void getTrackData(int key)     //run in a seperate thread due to AsyncObservableCollection - see FileModel for class
         {
-            DataService.Instance.trackData = datalayer.getQuery<myFitRecord>(key, "GetTrackData");
+            int nlps = datalayer.getUserData<int, int?>(key, "NumberLaps");     //get the number of laps for this key
+
+            if (LapsByDate && nlps > 1)
+            {
+                Dictionary<int, IEnumerable<myFitRecord>> dict = datalayer.GetTracksByLap(key);
+
+                List<myFitRecord> test1 = new List<myFitRecord>();
+
+                foreach (var q in dict)
+                {
+                    if (q.Key == SelectedLapIndex + 1)
+                    {
+                        test1 = q.Value as List<myFitRecord>;
+                        break;
+                    }
+                }
+
+                LapsByDateLapNbr = SelectedLapIndex + 1;    //used for Lap x on the chart
+
+                DataService.Instance.trackData = test1.AsAsyncObservableCollection();
+            }
+            else
+            {
+                DataService.Instance.trackData = datalayer.getQuery<myFitRecord>(key, "GetTrackData");
+            }
 
             //getHTTPRequest gr = new getHTTPRequest();
 
@@ -1369,20 +1604,118 @@ namespace ReadFit
             MessageBus.Instance.Publish<MyFlag>(new MyFlag { FlagName = "IsReady", FlagState = true });
         }
 
-        private int _SelectedIndex;
-        public int SelectedIndex
+        private int _SelectedActIndex;
+        public int SelectedActIndex
         {
-            get { return _SelectedIndex; }
+            get { return _SelectedActIndex; }
             set
             {
-                if (value != _SelectedIndex)
+                if (value != _SelectedActIndex)
                 {
-                    _SelectedIndex = value;
+                    _SelectedActIndex = value;
                     OnPropertyChanged("SelectedIndex");
                 }
             }
         }
 
+        private int _SelectedSesIndex;
+        public int SelectedSesIndex
+        {
+            get { return _SelectedSesIndex; }
+            set
+            {
+                if (value != _SelectedSesIndex)
+                {
+                    _SelectedSesIndex = value;
+                    OnPropertyChanged("SelectedSesIndex");
+                }
+            }
+        }
+
+        private int _SelectedLapIndex;
+        public int SelectedLapIndex
+        {
+            get { return _SelectedLapIndex; }
+            set
+            {
+                if (value != _SelectedLapIndex)
+                {
+                    _SelectedLapIndex = value;
+                    OnPropertyChanged("SelectedLapIndex");
+                }
+            }
+        }
+
+        private int _ActivityCnt;
+        public int ActivityCnt
+        {
+            get { return _ActivityCnt; }
+            set
+            {
+                if (value != _ActivityCnt)
+                {
+                    _ActivityCnt = value;
+                    OnPropertyChanged("ActivityCnt");
+                }
+            }
+        }
+
+        private int _LapCnt;
+        public int LapCnt
+        {
+            get { return _LapCnt; }
+            set
+            {
+                if (value != _LapCnt)
+                {
+                    _LapCnt = value;
+                    OnPropertyChanged("LapCnt");
+                }
+            }
+        }
+
+        private int _TrackCnt;
+        public int TrackCnt
+        {
+            get { return _TrackCnt; }
+            set
+            {
+                if (value != _TrackCnt)
+                {
+                    _TrackCnt = value;
+                    OnPropertyChanged("TrackCnt");
+                }
+            }
+        }
+
+        private int _StopTimeCnt;
+        public int StopTimeCnt
+        {
+            get { return _StopTimeCnt; }
+            set
+            {
+                if (value != _StopTimeCnt)
+                {
+                    _StopTimeCnt = value;
+                    OnPropertyChanged("StopTimeCnt");
+                }
+            }
+        }
+
+        private int _SessionCnt;
+        public int SessionCnt
+        {
+            get { return _SessionCnt; }
+            set
+            {
+                if (value != _SessionCnt)
+                {
+                    _SessionCnt = value;
+                    OnPropertyChanged("SessionCnt");
+                }
+            }
+        }
+      
         /// <summary>
         /// Return the number of records for a given tab
         /// </summary>
@@ -1396,37 +1729,49 @@ namespace ReadFit
             switch (selindx)
             {
                 case 0:
-                    if (DataService.Instance.activityData != null)
+                    if (!DataService.Instance.activityData.IsNullOrEmpty())
                     {
                         mycnt = DataService.Instance.activityData.Count();
+                        //ActivityCnt = mycnt;
                     }
                     break;
 
                 case 1:
-                    if (DataService.Instance.lapData != null)
+                    if (!DataService.Instance.lapData.IsNullOrEmpty())
                     {
-                        //mycnt = myLapDisplay.Count;
                         mycnt = DataService.Instance.lapData.Count();
+                        //LapCnt = mycnt;
                     }
                     break;
 
+                case 5:
                 case 2:
-                    if (DataService.Instance.trackData != null)
+                    if (!DataService.Instance.trackData.IsNullOrEmpty())
                     {
                         mycnt = DataService.Instance.trackData.Count();
+                        //TrackCnt = mycnt;
                     }
                     break;
 
                 case 3:
-                    if (DataService.Instance.STPTM != null)
+                    if (!DataService.Instance.STPTM.IsNullOrEmpty())
                     {
                         stcnt = DataService.Instance.STPTM.Count();
                         mycnt = (stcnt > 1) ? stcnt - 1 : 0;
+                        //StopTimeCnt = mycnt;
+                    }
+                    break;
+
+                case 4:
+                    if (!DataService.Instance.sessionData.IsNullOrEmpty())
+                    {
+                        mycnt = DataService.Instance.sessionData.Count();
+                        //SessionCnt = mycnt;
                     }
                     break;
 
                 default:
-                    //msgBoxobj.ShowNotification("Error in Tab Selected Index: value = " + selindx);
+                    msgBoxobj.ShowNotification("Error in Tab Selected Index: value = " + selindx);
                     break;
             }
 

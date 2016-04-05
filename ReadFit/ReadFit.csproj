@@ -1,0 +1,442 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{819E548D-9878-4AE3-961C-4298E073D8EF}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ReadFit</RootNamespace>
+    <AssemblyName>ReadFit</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>31005483</NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>false</MapFileExtensions>
+    <ProductName>Read Fit</ProductName>
+    <PublisherName>Wiskochil Software</PublisherName>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>17</ApplicationRevision>
+    <ApplicationVersion>1.1.1.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>0F4C4296D4E3360081D1755EAACC05E8E74AF60F</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot, Version=2014.1.546.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OxyPlot.Core.2014.1.546\lib\portable-net4+sl4+wp71+win8\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.WindowsForms, Version=2014.1.546.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OxyPlot.2014.1.546\lib\net45\OxyPlot.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=2014.1.546.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OxyPlot.Wpf.2014.1.546\lib\net45\OxyPlot.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Xps, Version=2014.1.546.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OxyPlot.Wpf.2014.1.546\lib\net45\OxyPlot.Xps.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.94.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.94.0\lib\net45\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.94.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.94.0\lib\net45\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.94.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.94.1\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Device" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AboutViewModel.cs" />
+    <Compile Include="ApplicationViewModel.cs" />
+    <Compile Include="CircularProgressBar.xaml.cs">
+      <DependentUpon>CircularProgressBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters.cs" />
+    <Compile Include="DALlite.cs" />
+    <Compile Include="DataGridMultipleSelection.cs" />
+    <Compile Include="DependencyFileDialog.cs" />
+    <Compile Include="DependencyOpenFileDialog.cs" />
+    <Compile Include="DependencySaveFileDialog.cs" />
+    <Compile Include="Dynastream\Fit\Crc.cs" />
+    <Compile Include="Dynastream\Fit\Decode.cs" />
+    <Compile Include="Dynastream\Fit\Defines.cs" />
+    <Compile Include="Dynastream\Fit\Encode.cs" />
+    <Compile Include="Dynastream\Fit\Field.cs" />
+    <Compile Include="Dynastream\Fit\FieldComponent.cs" />
+    <Compile Include="Dynastream\Fit\FieldDefinition.cs" />
+    <Compile Include="Dynastream\Fit\FitException.cs" />
+    <Compile Include="Dynastream\Fit\Header.cs" />
+    <Compile Include="Dynastream\Fit\Mesg.cs" />
+    <Compile Include="Dynastream\Fit\MesgBroadcaster.cs" />
+    <Compile Include="Dynastream\Fit\MesgDefinition.cs" />
+    <Compile Include="Dynastream\Fit\Profile.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\ActivityMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\BikeProfileMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\BloodPressureMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\CadenceZoneMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\CapabilitiesMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\CourseMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\CoursePointMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\DeviceInfoMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\DeviceSettingsMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\EventMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\FieldCapabilitiesMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\FileCapabilitiesMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\FileCreatorMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\FileIdMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\GoalMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\HrmProfileMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\HrvMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\HrZoneMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\LapMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\LengthMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\MemoGlobMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\MesgCapabilitiesMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\MetZoneMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\MonitoringInfoMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\MonitoringMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\PadMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\PowerZoneMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\RecordMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\ScheduleMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\SdmProfileMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\SessionMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\SlaveDeviceMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\SoftwareMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\SpeedZoneMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\SportMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\TotalsMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\UserProfileMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\WeightScaleMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\WorkoutMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\WorkoutStepMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Mesgs\ZonesTargetMesg.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Activity.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\ActivityClass.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\ActivityLevel.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\ActivitySubtype.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\ActivityType.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\AntNetwork.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\AntplusDeviceType.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\AutolapTrigger.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\BatteryStatus.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\BodyLocation.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Bool.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\BpStatus.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Checksum.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\ConnectivityCapabilities.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\CourseCapabilities.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\CoursePoint.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\DateTime.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\DeviceIndex.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\DeviceType.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\DisplayHeart.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\DisplayMeasure.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\DisplayPosition.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\DisplayPower.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Event.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\EventType.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\File.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\FileFlags.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\FitnessEquipmentState.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\GarminProduct.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Gender.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Goal.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\GoalRecurrence.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\HrType.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\HrZoneCalc.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Intensity.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Language.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\LapTrigger.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\LeftRightBalance.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\LeftRightBalance100.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\LengthType.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\LocalDateTime.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Manufacturer.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\MesgCount.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\MesgNum.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\MessageIndex.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\PwrZoneCalc.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Schedule.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\SessionTrigger.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\SourceType.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Sport.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\SportBits0.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\SportBits1.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\SportBits2.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\StrokeType.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\SubSport.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\SwimStroke.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\TimerTrigger.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\UserLocalId.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\Weight.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\WktStepDuration.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\WktStepTarget.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\WorkoutCapabilities.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\WorkoutHr.cs" />
+    <Compile Include="Dynastream\Fit\Profile\Types\WorkoutPower.cs" />
+    <Compile Include="Dynastream\Fit\Subfield.cs" />
+    <Compile Include="Dynastream\Utility\EndianBinaryReader.cs" />
+    <Compile Include="Dynastream\Utility\EndianBinaryWriter.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="FileModel.cs" />
+    <Compile Include="HeartRateValidator.cs" />
+    <Compile Include="HomeView.xaml.cs">
+      <DependentUpon>HomeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HomeViewModel.cs" />
+    <Compile Include="ListDataVeiwModel.cs" />
+    <Compile Include="ListDataView.xaml.cs">
+      <DependentUpon>ListDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MessageService.cs" />
+    <Compile Include="ReadFileView.xaml.cs">
+      <DependentUpon>ReadFileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReadFileViewModel.cs" />
+    <Compile Include="ReadFitParallel.cs" />
+    <Compile Include="ReadUtility.cs" />
+    <Compile Include="RelayCommand.cs" />
+    <Compile Include="ScrollIntoViewBehavior.cs" />
+    <Compile Include="SelectableTextBox.cs" />
+    <Compile Include="WriteKmlFiles.cs" />
+    <Compile Include="WriteKmlView.xaml.cs">
+      <DependentUpon>WriteKmlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WriteKmlViewModel.cs" />
+    <Compile Include="XmlDataAccess.cs" />
+    <Page Include="AboutView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CircularProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dictionary1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HomeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListDataView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPageViewModel.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="ReadFileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SlidingToggle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WriteKmlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ObservableObject.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Content Include="SQLite.Interop.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="utilitiesDocument.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="App.config" />
+    <Content Include="atom-author-link.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ogckml22.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

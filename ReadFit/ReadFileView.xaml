@@ -1,0 +1,385 @@
+﻿<UserControl x:Class="ReadFit.ReadFileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ReadFit"
+             xmlns:fm="clr-namespace:ReadFit.FileModel"
+             xmlns:fd="clr-namespace:QA.FileDialogs"
+             x:Name="myControl1"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1000">
+    
+    <UserControl.Resources>
+
+        <!--Get rid of the selected row highlight-->
+        <Style TargetType="DataGridCell">
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!--
+        <Style TargetType="{x:Type DataGridColumnHeader}" >
+            <Setter
+                Property="HorizontalContentAlignment" Value="Center" >
+            </Setter>
+            <Setter
+                Property="FontWeight" Value="Bold" >
+            </Setter>
+        </Style>
+        -->
+
+        <local:DateTimeConverter x:Key="dateTimeConverter" />
+        <local:FormatStringConverter x:Key="formatStr" />
+        <local:FormatSecondsToHHMMSS x:Key="formatSeconds" />
+        <local:FormatSpeedValue x:Key="formatSpeed" />
+        <local:FormatStringValueConverter x:Key="formatValue" />
+        <BooleanToVisibilityConverter x:Key="boolToVis" />
+        <local:DatagridRowNbr x:Key="rowNumberConverter" />
+
+        <Style x:Key="ProgressBarStyle" TargetType="ProgressBar">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Border BorderBrush="#BBC6C4" BorderThickness="1" CornerRadius="5" Padding="1" Visibility="{Binding Path=pbVisible, Converter={StaticResource boolToVis}}">
+                            <Grid x:Name="PART_Track" >
+                                <Rectangle x:Name="PART_Indicator" HorizontalAlignment="Left" RadiusX="5" RadiusY="5">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FF1D5666" Offset="1"/>
+                                            <GradientStop Color="#FF09B6FF"/>
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+       
+    </UserControl.Resources>
+    
+    <Grid>
+
+        <Button
+            Command="{Binding ElementName=dlgShow, Path=ShowDialogCommand}"
+            Content="Read File"
+            Style="{StaticResource RoundedButton}"
+            Height="50"
+            HorizontalAlignment="Left"
+            Margin="50,50,0,0"
+            Name="button1"
+            VerticalAlignment="Top"
+            Width="80" >
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="4" />
+            </Button.Effect>
+        </Button>
+
+        <Button
+            Command="{Binding SearchForData}"
+            CommandParameter="true"
+            Content="Search"
+            Style="{StaticResource RoundedButton}"
+            Height="50"
+            HorizontalAlignment="Left"
+            Margin="50,150,0,0"
+            Name="button2"
+            VerticalAlignment="Top"
+            Width="80" >
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="4" />
+            </Button.Effect>
+        </Button>
+
+        <Button
+            Command="{Binding ImportDataCommand}"
+            Content="Import"
+            Style="{StaticResource RoundedButton}"
+            Height="50"
+            HorizontalAlignment="Left"
+            Margin="50,250,0,0"
+            Name="button3"
+            VerticalAlignment="Top"
+            Width="80" >
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="4" />
+            </Button.Effect>
+        </Button>
+
+        <Button
+            Visibility="Hidden"
+            Command="{Binding TestTaskCommand}"
+            Content="Task Test"
+            Height="23"
+            HorizontalAlignment="Left"
+            Margin="50,205,0,0"
+            Name="button4"
+            VerticalAlignment="Top"
+            Width="75" />
+
+        <!--ItemsSource="{Binding Source={x:Static fm:DataService.Instance}, Path=filesToBeProcessed}"-->
+        <!--IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"-->
+        <!--ItemsSource="{Binding DisplayList}"-->
+        <!--ItemsSource="{Binding query}"-->
+        <!--
+        Command="{Binding Path=DataContext.TestTaskCommand, ElementName=myControl1}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=SelectedIndex}"
+        -->
+
+        <TabControl
+            Height="603"
+            HorizontalAlignment="Left"
+            Margin="160,10,0,0"
+            Name="tabControl1"
+            VerticalAlignment="Top"
+            Width="680" >
+            <TabItem
+                Style="{StaticResource styleTop}"
+                Header="Files"
+                Name="default3" >
+                <Grid>
+                    <DataGrid
+                        Name="readGrid1"
+                        Margin="25"
+                        AutoGenerateColumns="False"
+                        AlternatingRowBackground="Gainsboro"
+                        AlternationCount="2"
+                        Block.TextAlignment="Center"
+                        CanUserAddRows="False"
+                        CanUserReorderColumns="False"
+                        CanUserResizeColumns="False"
+                        CanUserSortColumns="False"
+                        ItemsSource="{Binding Path=DisplayList}" >
+                        <DataGrid.RowHeaderStyle>
+                            <Style TargetType="DataGridRowHeader">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource rowNumberConverter}">
+                                            <Binding />
+                                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.RowHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.HeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="ContentTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <CheckBox
+                                                        IsChecked="{Binding Path=DataContext.IsSelected, ElementName=myControl1, FallbackValue=False}"
+                                                        Command="{Binding Path=DataContext.SelectAllRows, ElementName=myControl1}"
+                                                        Content="Select"
+                                                        FontWeight="Bold"
+                                                        Width="Auto" />
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </DataGridTemplateColumn.HeaderStyle>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsChecked="{Binding Path=mySelectFlag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=False}"
+                                            Command="{Binding Path=DataContext.TestTaskCommand, ElementName=myControl1}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=SelectedIndex}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn
+                                Header="File Name"
+                                FontWeight="Bold"
+                                Width="Auto"
+                                Binding="{Binding Path=myFileName}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem
+                Style="{StaticResource styleTop}"
+                Header="Log"
+                Name="Default">
+                <Grid>
+                    <DataGrid
+                        ItemsSource="{Binding Source={x:Static fm:DataService.Instance}, Path=myFitFile1}"
+                        AutoGenerateColumns="False"
+                        Margin="5"
+                        Name="dataGrid1" >
+                        <DataGrid.RowHeaderStyle>
+                            <Style TargetType="DataGridRowHeader">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource rowNumberConverter}">
+                                            <Binding />
+                                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.RowHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Header="Fields"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=Field}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem
+                Visibility="Collapsed"
+                Style="{StaticResource styleTop}"
+                Header="Demo"
+                Name="Demo1" >
+                <Grid>
+                    <DataGrid
+                        ItemsSource="{Binding myFitFile}"
+                        AutoGenerateColumns="False"
+                        Margin="5"
+                        Name="dataGrid11" >
+                        <DataGrid.RowHeaderStyle>
+                            <Style TargetType="DataGridRowHeader">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource rowNumberConverter}">
+                                            <Binding />
+                                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.RowHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Header="Fields"
+                                FontWeight="Bold"
+                                Binding="{Binding Path=Field}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <Button
+            Visibility="Collapsed"
+            Command="{Binding TestFitRead}"
+            Content="Demo Read"
+            Height="23"
+            HorizontalAlignment="Left"
+            Margin="55,357,0,0"
+            Name="button5"
+            VerticalAlignment="Top"
+            Width="75" />
+
+        <fd:DependencyOpenFileDialog
+            InitialDirectory="{Binding OpenInitialDirectory}"
+            x:Name="dlgShow" 
+            FileOkCommand="{Binding OpenFileCommand}"
+            Title="Read FIT File"
+            Filter="{Binding FileFilters}"
+            FilterIndex="{Binding FilterIndex}" />
+        
+        <StackPanel
+            Name="spPB1"
+            Visibility="{Binding Path=pbVisible, Converter={StaticResource boolToVis}}"
+            Orientation="Horizontal"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="165,680,0,0" >
+            <TextBlock
+                Width="40"
+                Height="20"
+                Text="Read" />
+            <ProgressBar
+                Style="{StaticResource ProgressBarStyle}"
+                Minimum="0"
+                Maximum="{Binding pbMax}"
+                Value="{Binding ProgressValue}"
+                Height="20"
+                Name="progressBar1"
+                Width="300" />
+        </StackPanel>
+
+        <StackPanel
+            Name="spPB2"
+            Visibility="{Binding Path=pbVisible1, Converter={StaticResource boolToVis}}"
+            Orientation="Horizontal"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="165,730,0,0" >
+            <TextBlock
+                Width="40"
+                Height="20"
+                Text="Write" />
+            <ProgressBar
+                Style="{StaticResource ProgressBarStyle}"
+                Minimum="0"
+                Maximum="{Binding pbMax1}"
+                Value="{Binding ProgressValue1}"
+                Height="20"
+                Name="progressBar2"
+                Width="300" />
+        </StackPanel>
+
+        <!--Binding ProgressValue
+        <ProgressBar
+            Visibility="{Binding Path=pbVisible, Converter={StaticResource boolToVis}}"
+            Style="{StaticResource ProgressBarStyle}"
+            Minimum="0"
+            Maximum="{Binding pbMax}"
+            Value="{Binding ProgressValue}" 
+            Height="20"
+            HorizontalAlignment="Left"
+            Margin="165,679,0,0"
+            Name="progressBar1"
+            VerticalAlignment="Top"
+            Width="300" >
+            <ProgressBar.ToolTip>
+                <ToolTip> "File Read Status" </ToolTip>
+            </ProgressBar.ToolTip>
+        </ProgressBar>
+
+        <ProgressBar
+            Visibility="{Binding Path=pbVisible1, Converter={StaticResource boolToVis}}"
+            Minimum="0"
+            Maximum="{Binding pbMax1}"
+            Value="{Binding ProgressValue1}"
+            Style="{StaticResource ProgressBarStyle}"
+            HorizontalAlignment="Left"
+            Height="20"
+            Margin="165,730,0,0"
+            Name="progressBar2"
+            VerticalAlignment="Top"
+            Width="300">
+            <ProgressBar.ToolTip>
+                <ToolTip> "Database Write Status" </ToolTip>
+            </ProgressBar.ToolTip>
+        </ProgressBar>
+        -->
+
+        <TextBlock
+            Height="23"
+            HorizontalAlignment="Left"
+            Margin="10,0,0,10"
+            Name="textBlock1"
+            FontWeight="Bold"
+            FontSize="16"
+            Text="{Binding Name}"
+            VerticalAlignment="Bottom"
+            Width="96" />
+        
+
+    </Grid>
+</UserControl>
